@@ -12,4 +12,3 @@ soup = BeautifulSoup(html_text, 'lxml')
 products = soup.find_all('span', class_='em4 me4 em5 em7 tsBodyL yj4 jy5')
 print(products[0].text)
 print(products[1].text)
-sss
