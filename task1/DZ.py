@@ -14,16 +14,17 @@ soup = BeautifulSoup(html, "lxml")
 
 prodall = soup.find_all(attrs={"class": "DetailCardVacation__NoWrapContainer-sc-17wjakb-1 bAXyAM"})
 
-with psyc.connect(host='localhost', dbname='PythonDB', user='postgres', password='qwerty') as conn:
+with psyc.connect(host='localhost', dbname='mydb', user='postgres', password='12345678') as conn:
     with conn.cursor() as cursor:
-        for i, product in enumerate(all):
-            img_tag = product.find(attrs={"class": "Image__Picture-sc-412cjc-0"}).find("img")
-            place = product.find(attrs={"class": "Anchor-byh49a-0 dKVMQA"}).text
-            image = url + img_tag.attrs.get("src")
-            desc = product.find(attrs={"class": "Raw-slyvem-0 DetailCardVacation__DescriptionLarge-sc-17wjakb-11 eFsMWr emOKPv"}).text
-            download(url + img_tag.attrs.get("src"), f"images/{i}.jpg")
+        for i, product in enumerate(prodall):
 
-            cursor.execute(f"""insert into images(link, name, description, file)
-                               values ('{image}', '{place}', '{desc}', 'images/{i}.jpg')""")
+
+
+            description = product.find(attrs={"class": "Raw-slyvem-0 DetailCardVacation__DescriptionLarge-sc-17wjakb-11 eFsMWr emOKPv"}).text
+
+            params = {"description": description}
+            cursor.execute(f"""insert into images(  description) 
+                                values (%(description)s);""",params)
 
         conn.commit()
+
